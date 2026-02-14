@@ -11,7 +11,6 @@
             background-color: #1a1a1a; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             touch-action: none;
-            /* ป้องกันการกระพริบในมือถือบางรุ่น */
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
         }
@@ -158,7 +157,7 @@
             static getFrontLabel() {
                 if (sharedFrontTexture) return sharedFrontTexture;
                 const canvas = document.createElement('canvas');
-                canvas.width = 512; canvas.height = 768; // ปรับลดขนาดลง 50% เพื่อแก้การกระพริบ
+                canvas.width = 512; canvas.height = 768;
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.strokeStyle = '#222'; ctx.lineWidth = 20;
@@ -186,7 +185,7 @@
             static getSideTexture() {
                 if (sharedSideTexture) return sharedSideTexture;
                 const canvas = document.createElement('canvas');
-                canvas.width = 1024; canvas.height = 256; // ปรับลดขนาดลง
+                canvas.width = 1024; canvas.height = 256;
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000'; ctx.textBaseline = 'middle';
@@ -226,7 +225,7 @@
         class WoodPallets {
             constructor(width = 120, length = 100, height = 15) {
                 this.group = new THREE.Group();
-                const woodMat = new THREE.MeshLambertMaterial({ color: 0x8b5a2b }); // ใช้ Lambert เพื่อ Performance
+                const woodMat = new THREE.MeshLambertMaterial({ color: 0x8b5a2b });
                 for (let i = 0; i < 7; i++) {
                     const board = new THREE.Mesh(new THREE.BoxGeometry(14, 2, length), woodMat);
                     board.position.set(-width/2 + 7 + (i * 17.5), height - 1, 0);
@@ -266,7 +265,6 @@
                 this.camera.position.set(camDist, camDist, camDist);
                 
                 this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-                // จำกัด Pixel Ratio ไม่ให้สูงเกินไปเพื่อป้องกัน GPU ค้าง
                 this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(this.renderer.domElement);
@@ -275,6 +273,11 @@
                 this.controls.enableDamping = true;
                 this.controls.dampingFactor = 0.1;
                 this.controls.target.set(0, 50, 0);
+                this.controls.minDistance = 200;
+                this.controls.maxDistance = 2000;
+                this.controls.maxPolarAngle = Math.PI / 2.1; // ป้องกันการมองใต้พื้น
+                this.controls.autoRotate = true; // เพิ่มลูกเล่นให้หมุนเองเบาๆ
+                this.controls.autoRotateSpeed = 0.5;
 
                 this.initLights();
                 this.initLayout();
@@ -290,8 +293,8 @@
             }
 
             initLights() {
-                this.scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-                const dLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                this.scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+                const dLight = new THREE.DirectionalLight(0xffffff, 0.6);
                 dLight.position.set(100, 300, 100);
                 this.scene.add(dLight);
             }
@@ -314,7 +317,6 @@
 
             createPattern(isAlt, baseY) {
                 const group = new THREE.Group();
-                const spacing = 0.5;
                 if (!isAlt) {
                     group.add(this.createBox(-27.5, baseY, 13.5, 0));
                     group.add(this.createBox(0, baseY, 13.5, 0));
