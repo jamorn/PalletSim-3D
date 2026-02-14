@@ -3,10 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Box Layering System - Labels & Protection</title>
+    <title>3D Box Layering System - IRPC Public Company Limited</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
+        /* หัวข้อหลักด้านบน */
+        #main-header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            text-align: center;
+            pointer-events: none;
+        }
+        #main-header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 40px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
         /* ปุ่ม Toggle แบบ Minimal */
         #toggle-info {
             position: absolute;
@@ -43,7 +65,7 @@
             z-index: 10;
             border: 1px solid #444;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            display: none; /* ซ่อนไว้เป็นค่าเริ่มต้น */
+            display: none;
         }
         
         #controls-hint {
@@ -71,6 +93,10 @@
     </style>
 </head>
 <body>
+
+    <div id="main-header">
+        <h1>IRPC Public Company Limited</h1>
+    </div>
 
     <button id="toggle-info">?</button>
 
