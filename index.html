@@ -2,94 +2,96 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>3D Box Layering System - IRPC Public Company Limited</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: none; }
         
-        /* หัวข้อหลักด้านบน */
+        /* หัวข้อหลักด้านบน - ปรับขนาดให้เล็กลงเล็กน้อยเมื่ออยู่บนมือถือ */
         #main-header {
             position: absolute;
-            top: 20px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 5;
             text-align: center;
             pointer-events: none;
+            width: 90%;
         }
         #main-header h1 {
             color: #ffffff;
             margin: 0;
-            font-size: 28px;
-            letter-spacing: 2px;
+            font-size: clamp(16px, 4vw, 24px);
+            letter-spacing: 1px;
             text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 10px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
             border-radius: 50px;
             border: 1px solid rgba(0, 212, 255, 0.3);
+            display: inline-block;
+            white-space: nowrap;
         }
 
-        /* ปุ่ม Toggle แบบ Minimal */
+        /* ปุ่ม Toggle ปรับให้กดง่ายขึ้น (Touch Target) */
         #toggle-info {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             z-index: 20;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            width: 35px;
-            height: 35px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
-        #toggle-info:hover {
-            background: rgba(0, 212, 255, 0.8);
-            border-color: #00d4ff;
-        }
-
+        
         #info {
             position: absolute;
             top: 70px;
-            left: 20px;
+            left: 15px;
+            right: 15px;
+            max-width: 320px;
             color: white;
-            background: rgba(0,0,0,0.85);
-            padding: 20px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
             border-radius: 12px;
             z-index: 10;
             border: 1px solid #444;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             display: none;
+            font-size: 14px;
         }
         
         #controls-hint {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
             color: #ccc;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 11px;
+            white-space: nowrap;
+            pointer-events: none;
         }
+        
         #credit {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.4);
-            font-size: 12px;
-            letter-spacing: 1px;
+            bottom: 10px;
+            right: 15px;
+            color: rgba(255,255,255,0.3);
+            font-size: 10px;
         }
-        b { color: #00d4ff; }
-        .label-wood { color: #deb887; }
-        .label-plastic { color: #4dabf7; }
-        .label-hood { color: #ff4d4d; }
     </style>
 </head>
 <body>
@@ -101,16 +103,16 @@
     <button id="toggle-info">?</button>
 
     <div id="info">
-        <b>ระบบเปรียบเทียบพาเลทและระบบป้องกันฝุ่น</b><br>
-        <span class="label-wood">ซ้าย: Wood Pallet (8 ชั้น)</span><br>
-        <span class="label-plastic">กลาง: Plastic Pallet Blue (12 ชั้น)</span><br>
-        <span class="label-hood">ขวา: Plastic Red + Hood Protection</span><br>
+        <b style="color: #00d4ff;">ระบบเปรียบเทียบพาเลทและระบบป้องกันฝุ่น</b><br>
+        <span style="color: #deb887;">ซ้าย: Wood Pallet (8 ชั้น)</span><br>
+        <span style="color: #4dabf7;">กลาง: Plastic Pallet Blue (12 ชั้น)</span><br>
+        <span style="color: #ff4d4d;">ขวา: Plastic Red + Hood Protection</span><br>
         <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
-        <small id="face-name">Floating Labels: 1126NK 0260204008</small>
+        <small>Floating Labels: 1126NK 0260204008</small>
     </div>
 
     <div id="controls-hint">
-        🖱️ หมุนรอบวัตถุ | 🔍 ซูม | 📦 ป้ายข้อความกำกับแต่ละกอง
+        📱 หมุน: 1 นิ้ว | ซูม: 2 นิ้ว | เลื่อน: 3 นิ้ว
     </div>
 
     <div id="credit">
@@ -135,7 +137,8 @@
         const infoPanel = document.getElementById('info');
         let isPanelVisible = false;
 
-        infoBtn.addEventListener('click', () => {
+        infoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             isPanelVisible = !isPanelVisible;
             infoPanel.style.display = isPanelVisible ? 'block' : 'none';
             infoBtn.textContent = isPanelVisible ? '✕' : '?';
@@ -149,17 +152,14 @@
                 canvas.height = 256;
                 const ctx = canvas.getContext('2d');
                 
-                // Background
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                 ctx.roundRect(0, 0, canvas.width, canvas.height, 40);
                 ctx.fill();
                 
-                // Border
                 ctx.strokeStyle = bgColor;
                 ctx.lineWidth = 10;
                 ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
                 
-                // Text
                 ctx.fillStyle = 'white';
                 ctx.font = 'bold 60px sans-serif';
                 ctx.textAlign = 'center';
@@ -196,53 +196,47 @@
                 }
 
                 const texture = new THREE.CanvasTexture(canvas);
-                texture.anisotropy = 16;
+                texture.anisotropy = 4;
                 return texture;
             }
 
             static createSideTexture() {
                 const canvas = document.createElement('canvas');
-                canvas.width = 4096; canvas.height = 1024;
+                canvas.width = 2048; canvas.height = 512; // ลดขนาดลงเพื่อ Mobile Performance
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000'; ctx.textBaseline = 'middle';
-                const midY = 512;
+                const midY = 256;
                 const centerX = canvas.width / 2;
-                let startX = centerX - 1600; 
+                let startX = centerX - 800; 
 
                 ctx.textAlign = 'left';
-                ctx.font = 'bold 130px sans-serif';
+                ctx.font = 'bold 65px sans-serif';
                 ctx.fillText('1126NK 0260204008', startX, midY);
-                startX += 1380; 
+                startX += 700; 
 
-                const symbolX = startX + 100;
+                const symbolX = startX + 50;
                 const symbolY = midY;
-                ctx.lineWidth = 14; ctx.strokeStyle = '#000';
+                ctx.lineWidth = 7; ctx.strokeStyle = '#000';
                 ctx.beginPath();
-                ctx.moveTo(symbolX, symbolY - 75); ctx.lineTo(symbolX + 75, symbolY); ctx.lineTo(symbolX, symbolY + 75); ctx.lineTo(symbolX - 75, symbolY);
+                ctx.moveTo(symbolX, symbolY - 37); ctx.lineTo(symbolX + 37, symbolY); ctx.lineTo(symbolX, symbolY + 37); ctx.lineTo(symbolX - 37, symbolY);
                 ctx.closePath(); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(symbolX, symbolY - 75); ctx.lineTo(symbolX, symbolY + 75); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(symbolX - 35, symbolY); ctx.lineTo(symbolX + 35, symbolY); ctx.stroke();
 
-                ctx.font = 'bold 60px sans-serif';
-                ctx.fillText('TIS.1306-2566', symbolX + 110, midY - 38);
-                ctx.fillText('PP-01-1-5-F', symbolX + 110, midY + 38);
-                startX += 640; 
+                ctx.font = 'bold 30px sans-serif';
+                ctx.fillText('TIS.1306-2566', symbolX + 55, midY - 19);
+                ctx.fillText('PP-01-1-5-F', symbolX + 55, midY + 19);
+                startX += 320; 
 
-                const qrX = startX; const qrY = midY - 85;
-                ctx.fillRect(qrX, qrY, 170, 170); ctx.fillStyle = '#fff';
-                for(let i=0; i<3; i++) for(let j=0; j<3; j++) if((i+j)%2==0) ctx.fillRect(qrX+18+(i*48), qrY+18+(j*48), 40, 40);
-                ctx.fillStyle = '#000';
-                startX += 280; 
+                const qrX = startX; const qrY = midY - 42;
+                ctx.fillRect(qrX, qrY, 85, 85);
+                startX += 140; 
 
-                ctx.font = 'bold 75px sans-serif';
-                ctx.fillText('PP HOMO', startX, midY - 38); ctx.fillText('B  06:28', startX, midY + 38);
-                startX += 460; ctx.font = 'italic bold 85px sans-serif';
-                ctx.fillText('(RoHS)', startX, midY);
+                ctx.font = 'bold 37px sans-serif';
+                ctx.fillText('PP HOMO', startX, midY - 19); ctx.fillText('B  06:28', startX, midY + 19);
 
                 const texture = new THREE.CanvasTexture(canvas);
                 texture.center.set(0.5, 0.5); texture.rotation = (Math.PI / 2) + Math.PI; 
-                texture.anisotropy = 16;
+                texture.anisotropy = 4;
                 return texture;
             }
         }
@@ -283,11 +277,6 @@
                     leg.position.set(pos.x, (this.height - 3) / 2, pos.z);
                     this.group.add(leg);
                 });
-                [ -this.length/2 + 7.5, 0, this.length/2 - 7.5 ].forEach(zPos => {
-                    const skid = new THREE.Mesh(new THREE.BoxGeometry(this.width, 2, 15), plasticMaterial);
-                    skid.position.set(0, 1, zPos);
-                    this.group.add(skid);
-                });
             }
         }
 
@@ -295,19 +284,10 @@
             constructor(width, height, depth) {
                 const geometry = new THREE.BoxGeometry(width + 2, height + 1, depth + 2);
                 const material = new THREE.MeshPhysicalMaterial({
-                    color: 0xffffff,
-                    transparent: true,
-                    opacity: 0.35,
-                    roughness: 0.1,
-                    metalness: 0,
-                    transmission: 0.5, 
-                    thickness: 0.5,
-                    side: THREE.DoubleSide
+                    color: 0xffffff, transparent: true, opacity: 0.3,
+                    roughness: 0.1, transmission: 0.5, thickness: 0.5, side: THREE.DoubleSide
                 });
                 this.mesh = new THREE.Mesh(geometry, material);
-                const edges = new THREE.EdgesGeometry(geometry);
-                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 }));
-                this.mesh.add(line);
             }
         }
 
@@ -324,8 +304,6 @@
                 this.mesh = new THREE.Mesh(geometry, materials);
                 this.mesh.position.set(position.x, position.y, position.z);
                 this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
-                const edges = new THREE.EdgesGeometry(geometry);
-                this.mesh.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x999999 })));
             }
         }
 
@@ -333,29 +311,49 @@
             constructor() {
                 this.scene = new THREE.Scene();
                 this.scene.background = new THREE.Color(0x1a1a1a);
-                this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
-                this.camera.position.set(500, 500, 800);
-                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 5000);
+                
+                // ปรับตำแหน่งกล้องให้เหมาะสมกับหน้าจอแนวตั้งมากขึ้น
+                const camDist = window.innerWidth < 600 ? 1200 : 800;
+                this.camera.position.set(camDist, camDist, camDist);
+                
+                this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // จำกัด Pixel Ratio เพื่อ Performance
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(this.renderer.domElement);
+                
                 this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
                 this.controls.target.set(0, 80, 0);
                 this.controls.update();
+
+                window.addEventListener('resize', () => this.onResize());
+                
                 this.initLights();
                 this.initEnvironment();
                 this.initLayout();
                 this.animate();
             }
+
+            onResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
             initLights() {
-                this.scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+                this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
                 const dLight = new THREE.DirectionalLight(0xffffff, 0.8);
                 dLight.position.set(200, 600, 200);
                 this.scene.add(dLight);
             }
+
             initEnvironment() {
-                const gridHelper = new THREE.GridHelper(1500, 30, 0x444444, 0x333333);
+                const gridHelper = new THREE.GridHelper(2000, 40, 0x333333, 0x222222);
                 this.scene.add(gridHelper);
             }
+
             createPatternA() {
                 const group = new THREE.Group();
                 const boxW = 27; const boxH = 40; const boxD = 12; const spacing = 0.5;
@@ -366,6 +364,7 @@
                 group.add(new BoxProduct(boxW, boxH, boxD, { x: 20.25, y: 0, z: -20 }, { x: -Math.PI/2, y: 0, z: -Math.PI/2 }).mesh);
                 return group;
             }
+
             createPatternB() {
                 const group = new THREE.Group();
                 const boxW = 27; const boxH = 40; const boxD = 12; const spacing = 0.5;
@@ -376,10 +375,13 @@
                 group.add(new BoxProduct(boxW, boxH, boxD, { x: (boxW + spacing), y: 0, z: -13.5 }, { x: -Math.PI/2, y: 0, z: Math.PI }).mesh);
                 return group;
             }
+
             initLayout() {
                 const pW = 120; const pL = 100; const pH = 15; const bD = 12; 
                 const normalLabelText = '1126NK 0260204008';
-                const hoodLabelText = '1126NK 0260204008 + Plastic Hood';
+
+                // จัดตำแหน่งกองสินค้าให้ห่างกันมากขึ้นเมื่ออยู่บนมือถือ
+                const spread = window.innerWidth < 600 ? 300 : 250;
 
                 // 1. Wood Pallet (Left)
                 const woodGroup = new THREE.Group();
@@ -392,7 +394,7 @@
                 const woodLabel = ArtworkGenerator.createFloatingLabel(normalLabelText, '#deb887');
                 woodLabel.position.set(0, pH + (8 * bD) + 30, 0);
                 woodGroup.add(woodLabel);
-                woodGroup.position.x = -250;
+                woodGroup.position.x = -spread;
                 this.scene.add(woodGroup);
 
                 // 2. Plastic Pallet Blue (Center)
@@ -406,13 +408,11 @@
                 const blueLabel = ArtworkGenerator.createFloatingLabel(normalLabelText, '#4dabf7');
                 blueLabel.position.set(0, pH + (12 * bD) + 30, 0);
                 plasticBlue.add(blueLabel);
-                plasticBlue.position.x = 0;
                 this.scene.add(plasticBlue);
 
                 // 3. Plastic Pallet Red + Hood (Right)
                 const plasticRed = new THREE.Group();
-                const redPalletColor = 0xc0392b; 
-                plasticRed.add(new PlasticPallets(pW, pL, pH, redPalletColor).group);
+                plasticRed.add(new PlasticPallets(pW, pL, pH, 0xc0392b).group);
                 for (let i = 1; i <= 12; i++) {
                     let layer = (i % 2 !== 0) ? this.createPatternA() : this.createPatternB();
                     layer.position.y = pH + (bD / 2) + ((i - 1) * bD);
@@ -422,19 +422,21 @@
                 hood.mesh.position.y = pH + ((12 * bD) / 2);
                 plasticRed.add(hood.mesh);
 
-                const redLabel = ArtworkGenerator.createFloatingLabel(hoodLabelText, '#ff4d4d');
+                const redLabel = ArtworkGenerator.createFloatingLabel(normalLabelText + ' + Hood', '#ff4d4d');
                 redLabel.position.set(0, pH + (12 * bD) + 30, 0);
                 plasticRed.add(redLabel);
 
-                plasticRed.position.x = 250;
+                plasticRed.position.x = spread;
                 this.scene.add(plasticRed);
             }
+
             animate() {
                 requestAnimationFrame(() => this.animate());
                 this.controls.update();
                 this.renderer.render(this.scene, this.camera);
             }
         }
+        
         window.onload = () => new BoxApp();
     </script>
 </body>
